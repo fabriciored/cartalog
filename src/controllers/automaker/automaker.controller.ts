@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import {
   CreateAutomakerDto,
   UpdateAutomakerDto,
@@ -24,11 +32,16 @@ export class AutomakerController {
     return await this.automakerUseCases.createAutomaker(createAutomakerDto);
   }
 
-  @Put(':id')
+  @Put('/update/:id')
   async updateAutomaker(
     @Param('id') id: string,
     @Body() updateAutomakerDto: UpdateAutomakerDto,
   ) {
     return await this.automakerUseCases.updateAutomaker(id, updateAutomakerDto);
+  }
+
+  @Delete('/delete/:id')
+  async deleteAutomaker(@Param('id') id: string) {
+    return await this.automakerUseCases.deleteAutomaker(id);
   }
 }

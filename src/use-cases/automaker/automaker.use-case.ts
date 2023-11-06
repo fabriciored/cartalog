@@ -15,12 +15,15 @@ export class AutomakerUseCases {
   ) {}
 
   async getAllAutomakers(): Promise<Automaker[]> {
-    const automaker = await this.prismaService.automaker.findMany();
-    return automaker;
+    const automakers = await this.prismaService.automaker.findMany();
+    return automakers;
   }
 
   getAutomakerById(id: any): Promise<Automaker> {
-    return this.prismaService.automaker.findUnique({ where: { id } });
+    const automaker = this.prismaService.automaker.findUnique({
+      where: { id },
+    });
+    return automaker;
   }
 
   createAutomaker(createAutomakerDto: CreateAutomakerDto): Promise<Automaker> {
@@ -39,5 +42,12 @@ export class AutomakerUseCases {
       where: { id: +AutomakerId },
       data: Automaker,
     });
+  }
+
+  deleteAutomaker(AutomakerId: string): Promise<Automaker> {
+    const deleteAutomaker = this.prismaService.automaker.delete({
+      where: { id: +AutomakerId },
+    });
+    return deleteAutomaker;
   }
 }
