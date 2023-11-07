@@ -6,8 +6,6 @@ import {
   UpdateAutomakerDto,
 } from '../../core/dtos/automaker.dto';
 import { AutomakerFactoryService } from './automaker-factory.service';
-import { error } from 'console';
-import { Exceptions } from 'src/infrastructure/exceptions/exceptions.service';
 
 @Injectable()
 export class AutomakerUseCases {
