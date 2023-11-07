@@ -26,18 +26,26 @@ export class AutomakerUseCases {
     return automaker;
   }
 
-  createAutomaker(createAutomakerDto: CreateAutomakerDto): Promise<Automaker> {
-    const Automaker =
-      this.AutomakerFactoryService.createNewAutomaker(createAutomakerDto);
+  createAutomaker(
+    createAutomakerDto: CreateAutomakerDto,
+    file: Express.Multer.File,
+  ): Promise<Automaker> {
+    const Automaker = this.AutomakerFactoryService.createNewAutomaker(
+      createAutomakerDto,
+      file,
+    );
     return this.prismaService.automaker.create({ data: Automaker });
   }
 
   updateAutomaker(
     AutomakerId: string,
     updateAutomakerDto: UpdateAutomakerDto,
+    file: Express.Multer.File,
   ): Promise<Automaker> {
-    const Automaker =
-      this.AutomakerFactoryService.updateAutomaker(updateAutomakerDto);
+    const Automaker = this.AutomakerFactoryService.updateAutomaker(
+      updateAutomakerDto,
+      file,
+    );
     return this.prismaService.automaker.update({
       where: { id: +AutomakerId },
       data: Automaker,

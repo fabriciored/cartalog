@@ -6,7 +6,10 @@ import {
   Body,
   Put,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateAutomakerDto,
   UpdateAutomakerDto,
@@ -19,6 +22,7 @@ export class AutomakerController {
 
   @Get()
   async getAllAutomakers() {
+    console.log('test');
     return await this.automakerUseCases.getAllAutomakers();
   }
 
@@ -27,17 +31,30 @@ export class AutomakerController {
     return await this.automakerUseCases.getAutomakerById(id);
   }
 
+  @UseInterceptors(FileInterceptor('file'))
   @Post('/create')
-  async createAutomaker(@Body() createAutomakerDto: CreateAutomakerDto) {
-    return await this.automakerUseCases.createAutomaker(createAutomakerDto);
+  async createAutomaker(
+    @Body() createAutomakerDto: CreateAutomakerDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return await this.automakerUseCases.createAutomaker(
+      createAutomakerDto,
+      file,
+    );
   }
 
+  @UseInterceptors(FileInterceptor('file'))
   @Put('/update/:id')
   async updateAutomaker(
     @Param('id') id: string,
     @Body() updateAutomakerDto: UpdateAutomakerDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.automakerUseCases.updateAutomaker(id, updateAutomakerDto);
+    return await this.automakerUseCases.updateAutomaker(
+      id,
+      updateAutomakerDto,
+      file,
+    );
   }
 
   @Delete('/delete/:id')
