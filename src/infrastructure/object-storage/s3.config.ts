@@ -63,3 +63,5 @@ export class BucketS3 {
     }
   }
 }
+
+export const ObjectStorage = new BucketS3();
