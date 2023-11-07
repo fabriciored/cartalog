@@ -6,6 +6,8 @@ import {
   UpdateAutomakerDto,
 } from '../../core/dtos/automaker.dto';
 import { AutomakerFactoryService } from './automaker-factory.service';
+import { error } from 'console';
+import { Exceptions } from 'src/infrastructure/exceptions/exceptions.service';
 
 @Injectable()
 export class AutomakerUseCases {
@@ -19,9 +21,9 @@ export class AutomakerUseCases {
     return automakers;
   }
 
-  getAutomakerById(id: any): Promise<Automaker> {
+  getAutomakerById(id: string): Promise<Automaker> {
     const automaker = this.prismaService.automaker.findUnique({
-      where: { id },
+      where: { id: +id },
     });
     return automaker;
   }
@@ -38,7 +40,7 @@ export class AutomakerUseCases {
   }
 
   updateAutomaker(
-    AutomakerId: string,
+    id: string,
     updateAutomakerDto: UpdateAutomakerDto,
     file: Express.Multer.File,
   ): Promise<Automaker> {
@@ -47,15 +49,23 @@ export class AutomakerUseCases {
       file,
     );
     return this.prismaService.automaker.update({
-      where: { id: +AutomakerId },
+      where: { id: +id },
       data: Automaker,
     });
   }
 
-  deleteAutomaker(AutomakerId: string): Promise<Automaker> {
+  deleteAutomaker(id: string): Promise<Automaker> {
     const deleteAutomaker = this.prismaService.automaker.delete({
-      where: { id: +AutomakerId },
+      where: { id: +id },
     });
     return deleteAutomaker;
+  }
+
+  automakerExists(id: string): Promise<boolean> {
+    return this.prismaService.automaker
+      .findUnique({
+        where: { id: +id },
+      })
+      .then((automaker) => !!automaker);
   }
 }

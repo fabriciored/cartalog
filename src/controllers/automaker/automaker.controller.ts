@@ -14,6 +14,7 @@ import {
   CreateAutomakerDto,
   UpdateAutomakerDto,
 } from 'src/core/dtos/automaker.dto';
+import { Exceptions } from 'src/infrastructure/exceptions/exceptions.service';
 import { AutomakerUseCases } from 'src/use-cases/automaker/automaker.use-case';
 
 @Controller('api/automakers')
@@ -22,13 +23,19 @@ export class AutomakerController {
 
   @Get()
   async getAllAutomakers() {
-    console.log('test');
     return await this.automakerUseCases.getAllAutomakers();
   }
 
   @Get(':id')
   async getAutomakerById(@Param('id') id: any) {
-    return await this.automakerUseCases.getAutomakerById(id);
+    const automakerExists = await this.automakerUseCases.automakerExists(id);
+    if (automakerExists == false) {
+      return Exceptions.NotFoundException({
+        message: 'Automaker not found.',
+      });
+    } else if (automakerExists == true) {
+      return await this.automakerUseCases.getAutomakerById(id);
+    }
   }
 
   @UseInterceptors(FileInterceptor('file'))
@@ -37,6 +44,11 @@ export class AutomakerController {
     @Body() createAutomakerDto: CreateAutomakerDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!file) {
+      Exceptions.badRequestException({
+        message: 'Image file was not found.',
+      });
+    }
     return await this.automakerUseCases.createAutomaker(
       createAutomakerDto,
       file,
@@ -50,15 +62,34 @@ export class AutomakerController {
     @Body() updateAutomakerDto: UpdateAutomakerDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.automakerUseCases.updateAutomaker(
-      id,
-      updateAutomakerDto,
-      file,
-    );
+    const automakerExists = await this.automakerUseCases.automakerExists(id);
+    if (automakerExists == false) {
+      return Exceptions.NotFoundException({
+        message: 'Automaker not found.',
+      });
+    } else if (automakerExists == true) {
+      if (!file) {
+        Exceptions.badRequestException({
+          message: 'Image file was not found.',
+        });
+      }
+      return await this.automakerUseCases.updateAutomaker(
+        id,
+        updateAutomakerDto,
+        file,
+      );
+    }
   }
 
   @Delete('/delete/:id')
   async deleteAutomaker(@Param('id') id: string) {
-    return await this.automakerUseCases.deleteAutomaker(id);
+    const automakerExists = await this.automakerUseCases.automakerExists(id);
+    if (automakerExists == false) {
+      return Exceptions.NotFoundException({
+        message: 'Automaker not found.',
+      });
+    } else if (automakerExists == true) {
+      return await this.automakerUseCases.deleteAutomaker(id);
+    }
   }
 }
