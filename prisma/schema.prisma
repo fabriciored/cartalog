@@ -11,22 +11,23 @@ datasource db {
 }
 
 model Automaker {
-  id   String    @id @default(uuid())
-  name String
-  logo String
-  cars Car[]
-  created_at   DateTime  @default(now())
+  id         String   @id @default(uuid())
+  name       String
+  logo       String
+  cars       Car[]
+  created_at DateTime @default(now())
 }
 
 model Car {
-  id           String       @id @default(uuid())
+  id           String    @id @default(uuid())
   automaker    Automaker @relation(fields: [automakerId], references: [id])
   automakerId  String
+  image        String
   name         String
   model        String
   year         Int
   transmission String
-  fuel         Int
+  fuel         String
   power        String
   torque       String
   created_at   DateTime  @default(now())
