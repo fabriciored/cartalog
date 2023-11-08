@@ -11,7 +11,7 @@ import { AutomakerFactoryService } from './automaker-factory.service';
 export class AutomakerUseCases {
   constructor(
     private prismaService: PrismaService,
-    private AutomakerFactoryService: AutomakerFactoryService,
+    private automakerFactoryService: AutomakerFactoryService,
   ) {}
 
   async getAllAutomakers(): Promise<Automaker[]> {
@@ -22,6 +22,7 @@ export class AutomakerUseCases {
   getAutomakerById(id: string): Promise<Automaker> {
     const automaker = this.prismaService.automaker.findUnique({
       where: { id },
+      include: { cars: true },
     });
     return automaker;
   }
@@ -30,29 +31,35 @@ export class AutomakerUseCases {
     createAutomakerDto: CreateAutomakerDto,
     file: Express.Multer.File,
   ): Promise<Automaker> {
-    const Automaker = this.AutomakerFactoryService.createNewAutomaker(
+    const Automaker = this.automakerFactoryService.createNewAutomaker(
       createAutomakerDto,
       file,
     );
     return this.prismaService.automaker.create({ data: Automaker });
   }
 
-  updateAutomaker(
+  async updateAutomaker(
     id: string,
     updateAutomakerDto: UpdateAutomakerDto,
     file: Express.Multer.File,
   ): Promise<Automaker> {
-    const Automaker = this.AutomakerFactoryService.updateAutomaker(
+    const Automaker = this.automakerFactoryService.updateAutomaker(
       updateAutomakerDto,
       file,
     );
-    return this.prismaService.automaker.update({
+    const update = this.prismaService.automaker.update({
       where: { id },
       data: Automaker,
     });
+    return update;
   }
 
-  deleteAutomaker(id: string): Promise<Automaker> {
+  async deleteAutomaker(id: string): Promise<Automaker> {
+    const automakerLogo = await this.prismaService.automaker.findUnique({
+      where: { id },
+    });
+    const filename = new RegExp(/\/([^\/]+)$/).exec(automakerLogo.logo)[1];
+    this.automakerFactoryService.deleteAutomakerImage(filename);
     const deleteAutomaker = this.prismaService.automaker.delete({
       where: { id },
     });
