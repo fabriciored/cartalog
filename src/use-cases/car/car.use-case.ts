@@ -45,7 +45,7 @@ export class CarUseCases {
         image: Car.image,
         name: Car.name,
         model: Car.model,
-        year: +Car.year,
+        year: Car.year,
         transmission: Car.transmission,
         fuel: Car.fuel,
         power: Car.power,
@@ -60,17 +60,20 @@ export class CarUseCases {
     file: Express.Multer.File,
   ): Promise<Car> {
     const Car = await this.carFactoryService.updateCar(updateCarDto, file);
-    return this.prismaService.car.update({
+    const filename = new RegExp(/\/([^\/]+)$/).exec(Car.image)[1];
+    await this.carFactoryService.deleteCarImage(filename);
+    const update = await this.prismaService.car.update({
       where: { id },
       data: Car,
     });
+    return update;
   }
 
   async deleteCar(id: string): Promise<Car> {
-    const carImage = await this.prismaService.car.findUnique({
+    const Car = await this.prismaService.car.findUnique({
       where: { id },
     });
-    const filename = new RegExp(/\/([^\/]+)$/).exec(carImage.image)[1];
+    const filename = new RegExp(/\/([^\/]+)$/).exec(Car.image)[1];
     this.carFactoryService.deleteCarImage(filename);
     const deleteCar = this.prismaService.car.delete({
       where: { id },
