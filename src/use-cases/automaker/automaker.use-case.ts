@@ -43,11 +43,13 @@ export class AutomakerUseCases {
     updateAutomakerDto: UpdateAutomakerDto,
     file: Express.Multer.File,
   ): Promise<Automaker> {
-    const Automaker = this.automakerFactoryService.updateAutomaker(
+    const Automaker = await this.automakerFactoryService.updateAutomaker(
       updateAutomakerDto,
       file,
     );
-    const update = this.prismaService.automaker.update({
+    const filename = new RegExp(/\/([^\/]+)$/).exec(Automaker.logo)[1];
+    await this.automakerFactoryService.deleteAutomakerImage(filename);
+    const update = await this.prismaService.automaker.update({
       where: { id },
       data: Automaker,
     });
