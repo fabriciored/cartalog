@@ -2,7 +2,7 @@ export class Car {
   image: string;
   name: string;
   model: string;
-  year: number;
+  year: string;
   transmission: string;
   fuel: string;
   power: string;

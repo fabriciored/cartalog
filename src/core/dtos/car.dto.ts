@@ -13,7 +13,7 @@ export class CreateCarDto {
 
   @IsNumber()
   @IsNotEmpty()
-  year: number;
+  year: string;
 
   @IsString()
   @IsNotEmpty()
