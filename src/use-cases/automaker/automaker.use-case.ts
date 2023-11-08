@@ -21,7 +21,7 @@ export class AutomakerUseCases {
 
   getAutomakerById(id: string): Promise<Automaker> {
     const automaker = this.prismaService.automaker.findUnique({
-      where: { id: +id },
+      where: { id },
     });
     return automaker;
   }
@@ -47,14 +47,14 @@ export class AutomakerUseCases {
       file,
     );
     return this.prismaService.automaker.update({
-      where: { id: +id },
+      where: { id },
       data: Automaker,
     });
   }
 
   deleteAutomaker(id: string): Promise<Automaker> {
     const deleteAutomaker = this.prismaService.automaker.delete({
-      where: { id: +id },
+      where: { id },
     });
     return deleteAutomaker;
   }
@@ -62,7 +62,7 @@ export class AutomakerUseCases {
   automakerExists(id: string): Promise<boolean> {
     return this.prismaService.automaker
       .findUnique({
-        where: { id: +id },
+        where: { id },
       })
       .then((automaker) => !!automaker);
   }

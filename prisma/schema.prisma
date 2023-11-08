@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Automaker {
-  id   Int    @id @default(autoincrement())
+  id   String    @id @default(uuid())
   name String
   logo String
   cars Car[]
@@ -19,9 +19,9 @@ model Automaker {
 }
 
 model Car {
-  id           Int       @id @default(autoincrement())
+  id           String       @id @default(uuid())
   automaker    Automaker @relation(fields: [automakerId], references: [id])
-  automakerId  Int
+  automakerId  String
   name         String
   model        String
   year         Int
