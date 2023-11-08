@@ -1,15 +1,8 @@
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
+import { Automaker } from '@prisma/client';
 
 export class CreateCarDto {
-  @IsString()
-  @IsNotEmpty()
-  automaker: string;
-
-  @IsString()
-  @IsNotEmpty()
-  image: string;
-
   @IsString()
   @IsNotEmpty()
   name: string;
