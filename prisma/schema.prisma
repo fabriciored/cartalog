@@ -20,7 +20,7 @@ model Automaker {
 
 model Car {
   id           String    @id @default(uuid())
-  automaker    Automaker @relation(fields: [automakerId], references: [id])
+  automaker    Automaker @relation(fields: [automakerId], references: [id], onDelete: Cascade)
   automakerId  String
   image        String
   name         String
