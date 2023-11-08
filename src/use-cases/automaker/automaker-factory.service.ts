@@ -38,4 +38,11 @@ export class AutomakerFactoryService {
 
     return newAutomaker;
   }
+
+  deleteAutomakerImage(filename: string) {
+    return ObjectStorage.delete(
+      filename,
+      process.env.CATEGORIES_OBJECT_STORAGE_BUCKET_NAME,
+    );
+  }
 }

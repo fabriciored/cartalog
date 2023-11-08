@@ -1,7 +1,7 @@
 
 # API - Automaker
 
-Endpoint URL: ${**baseURL**}/automakers/
+Endpoint URL: ${**baseURL**}/api/automakers/
 
 
 ## API routes
@@ -53,5 +53,13 @@ Endpoint URL: ${**baseURL**}/automakers/
 | `name`      | `string` | **Optional**. Automaker name. |
 | `logo`      | `file` | **Optional**. Automaker image file. |
 
+### Delete automaker by Id
 
+```http
+  DELETE /api/automakers/delete/${id}
+```
+`Route parameters`
+| Params   | Type      | Description                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Required**. Car id. |
 
