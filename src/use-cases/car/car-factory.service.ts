@@ -1,5 +1,5 @@
-import { Car } from '../../core/entities/Car.entity';
-import { CreateCarDto, UpdateCarDto } from '../../core/dtos/Car.dto';
+import { Car } from '../../core/entities/car.entity';
+import { CreateCarDto, UpdateCarDto } from '../../core/dtos/car.dto';
 import { ObjectStorage } from 'src/infrastructure/object-storage/s3.config';
 
 export class CarFactoryService {
